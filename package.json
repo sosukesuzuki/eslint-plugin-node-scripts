@@ -1,0 +1,20 @@
+{
+  "name": "eslint-plugin-node-scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fmt": "npx prettier --write scripts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "js-yaml": "^4.0.0",
+    "mdast-util-from-markdown": "^0.8.5",
+    "semver": "^7.3.4",
+    "table": "^6.0.7",
+    "unist-util-visit-parents": "^3.1.1"
+  }
+}

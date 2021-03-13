@@ -1,12 +1,11 @@
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
 const yaml = require("js-yaml");
 const parseMd = require("mdast-util-from-markdown");
 const visit = require("unist-util-visit-parents");
 const { table } = require("table");
 const semverCompare = require("semver/functions/compare");
+const fetch = require("node-fetch");
 
 function parseYamlComment(text) {
   text = text
@@ -19,40 +18,53 @@ function parseYamlComment(text) {
 
 const args = process.argv.splice(2);
 
-const fileName = args[0];
-const filePath = path.resolve(process.cwd(), "./sources", fileName);
-const fileData = fs.readFileSync(filePath, "utf-8");
+const apiName = args[0];
+const docUrl = `https://raw.githubusercontent.com/nodejs/node/master/doc/api/${apiName}.md`;
 
-const tree = parseMd(fileData);
+const minVer = args[1] ?? "12.0.0";
 
-const data = [];
+(async () => {
+  const res = await fetch(docUrl);
+  if (!res.ok) {
+    throw res;
+  }
+  const body = await res.text();
+  const tree = parseMd(body);
 
-data.push(["API", "Added"]);
+  const data = [];
 
-visit(tree, "heading", (node, ancestors) => {
-  if (node.depth !== 3) {
-    return;
-  }
-  const parent = ancestors[0];
-  const siblings = parent.children;
-  const nodeIdx = siblings.findIndex((child) => child === node);
-  const maybeYamlComment = siblings[nodeIdx + 1];
-  if (maybeYamlComment.type !== "html") {
-    return;
-  }
-  let meta = parseYamlComment(maybeYamlComment.value);
-  if (meta.added == null) {
-    return;
-  }
-  const added = typeof meta.added === "string" ? [meta.added] : meta.added;
-  if (added.every((ver) => semverCompare(ver.substring(1), "11.15.0") !== 1)) {
-    return;
-  }
-  let maybeApiName = node.children[0].value;
-  if (maybeApiName === "Class: ") {
-    maybeApiName += node.children[1].value;
-  }
-  data.push([maybeApiName, meta.added]);
-});
+  data.push(["API", "Added"]);
 
-console.log(table(data));
+  visit(tree, "heading", (node, ancestors) => {
+    if (node.depth !== 3) {
+      return;
+    }
+    const parent = ancestors[0];
+    const siblings = parent.children;
+    const nodeIdx = siblings.findIndex((child) => child === node);
+    const maybeYamlComment = siblings[nodeIdx + 1];
+    if (maybeYamlComment.type !== "html") {
+      return;
+    }
+    let meta = parseYamlComment(maybeYamlComment.value);
+    if (meta.added == null) {
+      return;
+    }
+    const added = typeof meta.added === "string" ? [meta.added] : meta.added;
+    if (
+      added.every((ver) => {
+        const res = semverCompare(ver.substring(1), minVer);
+        return res === -1;
+      })
+    ) {
+      return;
+    }
+    let maybeApiName = node.children[0].value;
+    if (maybeApiName === "Class: ") {
+      maybeApiName += node.children[1].value;
+    }
+    data.push([maybeApiName, meta.added]);
+  });
+
+  console.log(table(data));
+})();

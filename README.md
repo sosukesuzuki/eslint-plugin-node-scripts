@@ -4,6 +4,8 @@ Useful scripts for maintainance eslint-plugin-node.
 
 ## `find-supported-version-from-docs.js`
 
+Node: A script with the same purpose is currently available at https://github.com/sosukesuzuki/nodejs-api-table. It can be conveniently viewed in a web browser.
+
 ```
 $  node ./scripts/find-supported-version-from-docs.js fs "12.0.0"
 ╔══════════════════════════════════════════════╤═══════════════════╗

@@ -48,3 +48,13 @@ $  node ./scripts/find-supported-version-from-docs.js fs "12.0.0"
 ║ Class: fs.StatWatcher                        │ v14.3.0,v12.20.0  ║
 ╚══════════════════════════════════════════════╧═══════════════════╝
 ```
+
+## `transform-add-new-node-builtin-feature.js`
+
+[jscodeshift](https://github.com/facebook/jscodeshift) transform script. Add new feature to lib/rules/no-unsupported-features/node-builtins.js.
+
+```sh
+$ jscodeshift -t ./scripts/transform-add-new-node-builtin-feature.js $ESLINT_PLUGIN_NODE_PATH/lib/rules/no-unsupported-features/node-builtins.js --module=crypto --api=diffieHellman --supported=v13.9.0 --backported=12.17.0
+```
+
+This script may break your coding style, so please fix it manually.

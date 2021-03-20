@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "fmt": "npx prettier --write scripts"
+    "fmt": "npx prettier --write scripts",
+    "transform:add-new-nodejs-feature": "jscodeshift -t ./scripts/transform-add-new-node-builtin-feature.js ../eslint-plugin-node/lib/rules/no-unsupported-features/node-builtins.js"
   },
   "keywords": [],
   "author": "",
@@ -17,5 +18,8 @@
     "semver": "^7.3.4",
     "table": "^6.0.7",
     "unist-util-visit-parents": "^3.1.1"
+  },
+  "devDependencies": {
+    "jscodeshift": "^0.11.0"
   }
 }

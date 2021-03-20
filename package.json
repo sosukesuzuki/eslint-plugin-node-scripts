@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "fmt": "npx prettier --write scripts",
-    "transform:add-new-nodejs-feature": "jscodeshift -t ./scripts/transform-add-new-node-builtin-feature.js ../eslint-plugin-node/lib/rules/no-unsupported-features/node-builtins.js"
+    "transform:add-new-node-builtin-feature": "jscodeshift -t ./scripts/transform-add-new-node-builtin-feature.js ../eslint-plugin-node/lib/rules/no-unsupported-features/node-builtins.js",
+    "transform:add-tests-for-new-node-builtin-feature": "jscodeshift -t ./scripts/transform-add-tests-for-new-node-builtin-feature.js ../eslint-plugin-node/tests/lib/rules/no-unsupported-features/node-builtins.js"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
     "mdast-util-from-markdown": "^0.8.5",
     "node-fetch": "^2.6.1",
     "semver": "^7.3.4",
+    "semver-truncate": "^2.0.0",
     "table": "^6.0.7",
     "unist-util-visit-parents": "^3.1.1"
   },

@@ -1,5 +1,3 @@
-module.exports.parser = "babel";
-
 module.exports = function (fileInfo, { jscodeshift }, options) {
   const j = jscodeshift;
 

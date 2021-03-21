@@ -1,4 +1,4 @@
-const semverTruncate = require("semver-truncate");
+const semverDecrement = require("semver-decrement");
 
 module.exports = function (fileInfo, { jscodeshift }, options) {
   const j = jscodeshift;
@@ -220,13 +220,13 @@ module.exports = function (fileInfo, { jscodeshift }, options) {
         }
       } else if (isInvalid) {
         if (supported) {
-          const truncated = semverTruncate(supported, "minor");
+          const decremented = semverDecrement(supported, "minor");
           j(path).insertAfter(
             generateTestCaseObject(
               module,
               api,
               generateCjsCode(module, api),
-              truncated,
+              decremented,
               false,
               true
             )
@@ -244,13 +244,13 @@ module.exports = function (fileInfo, { jscodeshift }, options) {
         }
         if (backported) {
           for (const version of backported.split(",")) {
-            const truncated = semverTruncate(version, "minor");
+            const decremented = semverDecrement(version, "minor");
             j(path).insertAfter(
               generateTestCaseObject(
                 module,
                 api,
                 generateCjsCode(module, api),
-                truncated,
+                decremented,
                 false,
                 true
               )
@@ -260,7 +260,7 @@ module.exports = function (fileInfo, { jscodeshift }, options) {
                 module,
                 api,
                 generateEsmCode(module, api),
-                truncated,
+                decremented,
                 false,
                 true
               )
